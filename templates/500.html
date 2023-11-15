@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erreur Serveur</title>
-</head>
-<body>
-    <h1 style="text-align:center;">Oups... Erreur serveur</h1>
-    <h2 style="text-align:center;">Vérifie les paramètres</h2>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Erreur 500{% endblock %}
+
+    {% block content %}
+        <h1 style="text-align:center;">Oups... Erreur serveur</h1>
+        <h2 style="text-align:center;">Vérifie les paramètres</h2>
+    {% endblock %}

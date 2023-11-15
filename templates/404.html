@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
 
-    <style href="css/style.css"></style>
-    <title>Erreur 404</title>
-</head>
-<body>
-    <h1 style="text-align:center;">Oups... Page Invalide</h1>
-    <h2 style="text-align:center;">Il semblerait que tu te sois égaré</h2>
-    <div class="container">
-    </div>
-</body>
-</html>
+{% block title %}Erreur 404{% endblock %}
+
+    {% block content %}
+        <h1 style="text-align:center;">Oups... Page Invalide</h1>
+        <h2 style="text-align:center;">Il semblerait que tu te sois égaré</h2>
+    {% endblock %}
