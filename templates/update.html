@@ -10,21 +10,29 @@
 {% endfor %}
 
 {% if name %}
-    <h1>Hello {{ name }}</h1>
+    <h1>Mise à jour Utilisateur</h1>
+
 {% else %}
-    <h1>Ajouter nouvel utilisateur</h1>
+    <h1>Mise à jour Utilisateur</h1>
     <br>
-    <form method="POST">
+    <form action="/update/{{ name_to_update.id }}" method="POST">
         {{ form.hidden_tag() }}
 
         {{ form.name.label(
             class="form-label") }}
         {{ form.name(
-            class="form-control") }}
+            class="form-control", value=name_to_update.name) }}
+        <br>
+        {{ form.email.label(
+            class="form-label") }}
+        {{ form.email(
+            class="form-control", value=name_to_update.email) }}
         <br>
         {{ form.submit(
             class="btn btn-secondary") }}
     </form>
+    <br><br>
+  
 
 {% endif %}
 
