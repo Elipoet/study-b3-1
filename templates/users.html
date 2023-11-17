@@ -2,49 +2,25 @@
 
 {% block content %}
 
-{% if not name %}
-    <h1>Listes des Utilisateurs</h1>
-    <table class="table table-hover table-bordered table-striped">
-        {% for our_user in our_users %}
-            <tr>
-                <td>
-                    {{ our_user.id }}. <a href="{{ url_for('update', id=our_user.id) }}">{{ our_user.name }}</a> - {{ our_user.email }} - {{ our_user.password }}
-                    - <a href="{{ url_for('delete', id=our_user.id) }}">Supprimer</a>
-                </td>
-            </tr>
-        {% endfor %}    
-    </table>
-{% else %}
-    <h1>Erreur</h1>
-{% endif %}
-
-
-<!-- {% for message in get_flashed_messages() %}
+{% for message in get_flashed_messages() %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-{% endfor %} -->
+{% endfor %}
+
+<h1> Liste des Utilisateurs : </h1>
 
 
-
-<!-- {% if name %}
-    <h1>Hello {{ name }}</h1>
-{% else %}
-    <h1>Ajouter nouvel utilisateur</h1>
-    <br>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-
-        {{ form.name.label(
-            class="form-label") }}
-        {{ form.name(
-            class="form-control") }}
+<table class="table table-hover table-bordered table-striped" style="border-collapse: separate; border-spacing: 5px;">
+{% for user in users %}
+<tr>
+    <td>
+        id n° {{ user.id }}. Nom : <a href="{{ url_for('update', id=user.id)  }}">{{ user.name }}</a> - @ : {{ user.email }} - <a href="{{ url_for('delete', id=user.id) }}">Supprimer</a>
         <br>
-        {{ form.submit(
-            class="btn btn-secondary") }}
-    </form>
-
-{% endif %} -->
+    </td>
+</tr>
+{% endfor %}
+</table>
 
 {% endblock %}

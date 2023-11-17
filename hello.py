@@ -83,18 +83,23 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template("500.html"), 500
 
-# Creation Page Utilisateurs
-@app.route('/users', methods=['GET', 'POST'])
+# Listes de Utilisateurs
+@app.route('/users')
 def users():
-    name = None
-    form = NamerForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        form.name.data = ''
-        flash("Ajout de l'Utilisateur réussi")
-    return render_template("users.html",
-                           name = name, 
-                           form = form)
+    users = Users.query.order_by(Users.id)
+    return render_template('users.html', users=users)
+# # Creation Page Utilisateurs
+# @app.route('/users', methods=['GET', 'POST'])
+# def users():
+#     name = None
+#     form = NamerForm()
+#     if form.validate_on_submit():
+#         name = form.name.data
+#         form.name.data = ''
+#         flash("Ajout de l'Utilisateur réussi")
+#     return render_template("users.html",
+#                            name = name, 
+#                            form = form)
 
 @app.route('/user/ajout', methods=['GET','POST'])
 def ajout():
