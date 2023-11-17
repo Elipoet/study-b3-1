@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, url_for, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, EmailField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, EqualTo, Length
@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
 
 # creation flask instance
 app = Flask(__name__)
@@ -34,15 +35,32 @@ class NamerForm(FlaskForm):
 
 # creation form user
 class UserForm(FlaskForm):
-    name = StringField("Nom de l'Utilisateur", validators=[DataRequired()])
+    name = StringField("Nom Prénom", validators=[DataRequired()])
+    username = StringField("Nom d'Utilisateur", validators=[DataRequired()])
     email = EmailField("Email", validators=[DataRequired()])
     password_hash = PasswordField("Mot de Passe", validators=[DataRequired(), EqualTo('password_hash2', message="Les mots de passes doivent correspondre")])
     password_hash2 = PasswordField("Confirmer Mot de Passe", validators=[DataRequired()])
     submit = SubmitField("Soumettre")
 
+# Flask_login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+# Create Login Form
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Mot de Passe", validators=[DataRequired()])
+    submit = SubmitField("Soumettre")
+
 # Modele db
-class Users(db.Model):
+class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
@@ -62,7 +80,7 @@ class Users(db.Model):
     # Creation String
     def __repr_(self):
         return '<Name %r>' % self.name
-    
+
 #Accueil'
 @app.route('/')
 def index():
@@ -109,10 +127,11 @@ def ajout():
         user = Users.query.filter_by(email=form.email.data).first()
         if user is None:
             hashed_password = generate_password_hash(form.password_hash.data, method='pbkdf2')
-            user = Users(name=form.name.data, email=form.email.data, password_hash=hashed_password)
+            user = Users(username=form.username.data, name=form.name.data, email=form.email.data, password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
         name = form.name.data
+        form.username.data = ''
         form.name.data = ''
         form.email.data = ''
         form.password_hash.data = ''
@@ -195,6 +214,36 @@ def test_pwd():
                            passed = passed, 
                            form = form)
 
+# login page
+@app.route('/login', methods=['GET','POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = Users.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password_hash, form.password.data):
+                login_user(user)
+                flash("La connexion a réussi.")
+                return redirect(url_for('dashboard'))
+            else : 
+                flash("La connexion n'a pas réussi. Le nom d'utilisateur ou mot de passe ne correspondent pas.")
+        else : 
+            flash("Ce nom d'utilisateur n'existe pas.")
+    return render_template('login.html', form=form)
+
+# logout page
+@app.route('/logout', methods=['GET','POST'])
+@login_required
+def logout():
+    logout_user()
+    flash("Vous avez été déconnecté.")
+    return redirect(url_for('login'))
+
+# Dashboard page
+@app.route('/dashboard', methods=['GET','POST'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

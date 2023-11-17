@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="display: flex; flex: auto; padding: 5px;">
+    <h1 style="flex: 5;"> Dashboard </h1>
+    <div class="container" style="flex: 1; text-align: center; vertical-align: center;">
+        <a class="btn btn-danger" href="{{ url_for('logout') }}">Déconnexion</a>
+    </div>
+</div>
+<br>
+<p>Connexion réussie</p>  
+
+<div class="card">
+    <div style="font-size: 20px; font-weight: bold;" class="card-header">id n°{{ current_user.id }} - {{ current_user.name }}</div>
+    <div class="card-body">
+        <h5 class="card-title">Utilisateur : {{ current_user.username }}</h5>
+        <p class="card-text">Email : {{ current_user.email }}</p>
+        <p class="card-text">Date première connexion : {{ current_user.date_added }}</p>
+    </div>
+</div>
+
+{% endblock %}
