@@ -12,17 +12,18 @@
 {% if name %}
     <h1>Liste des Utilisateurs :</h1>
     <br><br>
+    {% for user in users %}
     <table class="table table-hover table-bordered table-striped">
-        {% for our_user in our_users %}
+     
             <tr>
                 <td>
-                    {{ our_user.id }}. <a href="{{ url_for('update', id=our_user.id) }}">{{ our_user.name }}</a> - {{ our_user.email }} - 
-                    MdP: {{ our_user.password_hash }}
-                    - <a href="{{ url_for('delete', id=our_user.id) }}">Supprimer</a>
+                    ID n° {{ user.id }}. Utilisateur : <a href="{{ url_for('update', id=user.id)  }}">{{ user.username }}</a> - Nom : {{ user.name }} - Email : {{ user.email }} - <a href="{{ url_for('delete', id=user.id) }}">Supprimer</a>
+                    <br>
                 </td>
             </tr>
-        {% endfor %}    
+        
     </table>
+    {% endfor %}  
 {% else %}
     <h1>Ajouter nouvel utilisateur</h1>
     <br>
@@ -58,17 +59,18 @@
             class="btn btn-secondary") }}
     </form>  
     <br><br>
-    <table class="table table-hover table-bordered table-striped">
-        {% for our_user in our_users %}
-            <tr>
-                <td>{{ our_user.id }}. <a href="{{ url_for('update', id=our_user.id)  }}">{{ our_user.username }}</a> - {{ our_user.name }}- {{ our_user.email }} - 
-                    MdP: {{ our_user.password_hash }}
-                    - <a href="{{ url_for('delete', id=our_user.id) }}">Supprimer</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-
+ 
+<table class="table table-hover table-bordered table-striped">
+    {% for user in users %}
+        <tr>
+            <td>
+                ID n° {{ user.id }}. Utilisateur : <a href="{{ url_for('update', id=user.id)  }}">{{ user.username }}</a> - Nom : {{ user.name }} - Email : {{ user.email }} - <a href="{{ url_for('delete', id=user.id) }}">Supprimer</a>
+                <br>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 {% endif %}
+
 
 {% endblock %}

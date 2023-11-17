@@ -39,20 +39,19 @@ df = pd.DataFrame(ventes)
 # plt.show()
 
 # df.groupby(['CSP','HA_TOTAL']).size().unstack().plot(kind='bar', stacked=True)
-# plt.show()
+# plt.show()-
 
-def plot1():
-    df.groupby('CSP')['HA_TOTAL'].sum().plot(kind='bar')
-    plt.xticks(fontsize=4, rotation=25)
-    plt.subplots_adjust(bottom=0.2)
-    plt.title("Dépenses par Panier Moyen en fonction des CSP")
-    
-plt.show(plot1)
-# plot2 = df.groupby(['CSP','CATEGORIE_HA'])['HA_TOTAL'].sum().unstack().plot(kind="bar", stacked=True)
-# plt.legend(loc=0,fontsize=10)
-# plt.xticks(fontsize=4, rotation=25)
-# plt.subplots_adjust(bottom=0.2)
-# plt.title("Dépenses par Catégorie de produits en fonction des CSP")
-# # plt.show()
+df.groupby('CSP')['HA_TOTAL'].sum().plot(kind='bar')
+plt.xticks(fontsize=4, rotation=25)
+plt.subplots_adjust(bottom=0.2)
+plt.title("Dépenses par Panier Moyen en fonction des CSP")    
+plt.show()
+
+df.groupby(['CSP','CATEGORIE_HA'])['HA_TOTAL'].sum().unstack().plot(kind="bar", stacked=True)
+plt.legend(loc=0,fontsize=10)
+plt.xticks(fontsize=4, rotation=25)
+plt.subplots_adjust(bottom=0.2)
+plt.title("Dépenses par Catégorie de produits en fonction des CSP")
+plt.show()
 
 # grid.newpage()

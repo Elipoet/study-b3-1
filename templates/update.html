@@ -9,10 +9,7 @@
     </div>
 {% endfor %}
 
-{% if name %}
-    <h1>Mise à jour Utilisateur</h1>
-
-{% else %}
+{% if id == current_user.id %}
     <h1>Mise à jour Utilisateur</h1>
     <br>
     <form action="/update/{{ name_to_update.id }}" method="POST">
@@ -23,15 +20,15 @@
         {{ form.name(
             class="form-control", value=name_to_update.name) }}
         <br>
+        {{ form.username.label(
+            class="form-label") }}
+        {{ form.username(
+            class="form-control", value=name_to_update.username) }}
+        <br>
         {{ form.email.label(
             class="form-label") }}
         {{ form.email(
             class="form-control", value=name_to_update.email) }}
-        <br>
-        {{ form.password_hash.label(
-            class="form-label") }}
-        {{ form.password_hash(
-            class="form-control", value=name_to_update.password_hash) }}
         <br>
         {{ form.submit(
             class="btn btn-secondary") }}
@@ -39,7 +36,13 @@
         <a href="{{ url_for('delete', id=id) }}" class="btn btn-danger">Supprimer</a>
     </form>
     <br><br>
-  
+{% else %}
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Désolé, vous ne pouvez modifier que les informations de votre profil.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-danger btn-sm">Retour à l'accueil</a>
 
 {% endif %}
 

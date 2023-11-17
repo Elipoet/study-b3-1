@@ -1,19 +1,12 @@
 from flask import Flask, render_template, flash, request, url_for, redirect
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, EmailField, PasswordField, BooleanField, ValidationError
+from wtforms.validators import DataRequired, EqualTo, Length
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, login_required, logout_user, current_user, login_user
-from webforms import LoginForm, UserForm, PasswordForm, NamerForm
-import random
-import pandas as pd
-from faker import Faker
-import locale 
-import io
-import base64
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # creation flask instance
 app = Flask(__name__)
@@ -29,6 +22,26 @@ app.config['SECRET_KEY'] = "secretkey_studi_b3"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# creation form class
+class PasswordForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    password_hash = PasswordField("Mot de Passe", validators=[DataRequired()])
+    submit = SubmitField("Soumettre")
+
+# creation form class
+class NamerForm(FlaskForm):
+    name = StringField("Nom de l'Utilisateur", validators=[DataRequired()])
+    submit = SubmitField("Soumettre")
+
+# creation form user
+class UserForm(FlaskForm):
+    name = StringField("Nom Prénom", validators=[DataRequired()])
+    username = StringField("Nom d'Utilisateur", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired()])
+    password_hash = PasswordField("Mot de Passe", validators=[DataRequired(), EqualTo('password_hash2', message="Les mots de passes doivent correspondre")])
+    password_hash2 = PasswordField("Confirmer Mot de Passe", validators=[DataRequired()])
+    submit = SubmitField("Soumettre")
+
 # Flask_login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -37,6 +50,36 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
+
+# Create Login Form
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Mot de Passe", validators=[DataRequired()])
+    submit = SubmitField("Soumettre")
+
+# Modele db
+class Users(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    password_hash = db.Column(db.String(300), nullable=False)
+
+    @property
+    def password(self):
+        raise AttributeError("Le mot de passe n'est pas une valeur visible")
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    # Creation String
+    def __repr_(self):
+        return '<Name %r>' % self.name
 
 #Accueil'
 @app.route('/')
@@ -103,6 +146,7 @@ def ajout():
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
     form = UserForm()
+# changement de pwd ne fonctionne plus !
     name_to_update = Users.query.get_or_404(id)
     if request.method == "POST":
         name_to_update.name = request.form['name']
@@ -229,44 +273,5 @@ def dashboard():
                                 form = form,
                                 name_to_update = name_to_update,
                                 id=id)
-
-
-
-# DB MOCK DATA
-class MockData(db.Model):
-    id_client = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False, unique=True)
-    csp = db.Column(db.String(30), nullable=False)
-    categorie_ha = db.Column(db.String(30), nullable=False)
-    ha_total = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return '<Name %r>' %self.id   
-
-# Modele db
-class Users(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False, unique=True)
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    password_hash = db.Column(db.String(300), nullable=False)
-
-    @property
-    def password(self):
-        raise AttributeError("Le mot de passe n'est pas une valeur visible")
-    
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    # Creation String
-    def __repr_(self):
-        return '<Name %r>' % self.name
-
 if __name__ == '__main__':
     app.run(debug=True)

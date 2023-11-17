@@ -16,7 +16,7 @@
 {% for user in users %}
 <tr>
     <td>
-        id n° {{ user.id }}. Nom : <a href="{{ url_for('update', id=user.id)  }}">{{ user.name }}</a> - @ : {{ user.email }} - <a href="{{ url_for('delete', id=user.id) }}">Supprimer</a>
+        ID n° {{ user.id }}. Utilisateur : <a href="{{ url_for('update', id=user.id)  }}">{{ user.username }}</a> - Nom : {{ user.name }} - Email : {{ user.email }} - <a href="{{ url_for('delete', id=user.id) }}">Supprimer</a>
         <br>
     </td>
 </tr>

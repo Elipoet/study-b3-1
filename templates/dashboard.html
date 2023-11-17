@@ -7,8 +7,8 @@
         <a class="btn btn-danger" href="{{ url_for('logout') }}">Déconnexion</a>
     </div>
 </div>
-<br>
-<p>Connexion réussie</p>  
+<br> 
+<br><br>
 
 <div class="card">
     <div style="font-size: 20px; font-weight: bold;" class="card-header">id n°{{ current_user.id }} - {{ current_user.name }}</div>
@@ -16,7 +16,41 @@
         <h5 class="card-title">Utilisateur : {{ current_user.username }}</h5>
         <p class="card-text">Email : {{ current_user.email }}</p>
         <p class="card-text">Date première connexion : {{ current_user.date_added }}</p>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Déconnexion</a>
+        
+        <a href="{{ url_for('update', id=current_user.id) }}" class="btn btn-secondary btn-sm">Mettre à Jour</a>
+
+        <a href="{{ url_for('delete', id=current_user.id) }}" class="btn btn-danger btn-sm">Supprimer</a>
     </div>
 </div>
-
+<br><br>
+<div class="card">
+    <div class="card-header"> Mise à jours du Profil </div>
+    <div class="card-body">
+        <form action="/dashboard" method="POST">
+            {{ form.hidden_tag() }}
+    
+            {{ form.name.label(
+                class="form-label") }}
+            {{ form.name(
+                class="form-control", value=name_to_update.name) }}
+            <br>
+            {{ form.username.label(
+                class="form-label") }}
+            {{ form.username(
+                class="form-control", value=name_to_update.username) }}
+            <br>
+            {{ form.email.label(
+                class="form-label") }}
+            {{ form.email(
+                class="form-control", value=name_to_update.email) }}
+            <br>
+            {{ form.submit(
+                class="btn btn-secondary btn-sm") }}
+    
+            <a href="{{ url_for('delete', id=id) }}" class="btn btn-danger btn-sm">Supprimer</a>
+        </form>
+    </div>
+   
+</div>
 {% endblock %}
