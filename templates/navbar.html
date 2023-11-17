@@ -12,11 +12,20 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('admin',name='Test') }}">Admin</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" href="{{ url_for('users') }}">Utilisateurs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('ajout') }}">Ajout Utilisateur</a>
+          </li> -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Utilisateurs
+            </a>
+            <ul class="dropdown-menu">
+              <!-- <li><a class="dropdown-item" href="{{ url_for('users') }}">Liste Utilisateurs</a></li> -->
+              <li><a class="dropdown-item" href="{{ url_for('ajout') }}">Ajout Utilisateurs</a></li>
+            </ul>
           </li>
         </ul>
       </div>

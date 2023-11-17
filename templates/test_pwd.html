@@ -3,44 +3,42 @@
 {% block content %}
 
 {% for message in get_flashed_messages() %}
+
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+
 {% endfor %}
 
-{% if name %}
-    <h1>Mise à jour Utilisateur</h1>
+{% if email %}
+    <h1>Email : {{ email }}</h1>
+    <h1>Password : {{ password }}</h1>
+    <br>
+    <h2> info : </h2>
+    Name : {{ pw_to_check.name}} <br>
+    Email : {{ pw_to_check.email}} <br>
+    MdP : {{ pw_to_check.password_hash}} <br> <br>
+    Passed : {{ passed }}
 
 {% else %}
-    <h1>Mise à jour Utilisateur</h1>
+    <h1> Quels sont votre email et mot de passe ?</h1>
     <br>
-    <form action="/update/{{ name_to_update.id }}" method="POST">
+    <form method="POST">
+
         {{ form.hidden_tag() }}
 
-        {{ form.name.label(
-            class="form-label") }}
-        {{ form.name(
-            class="form-control", value=name_to_update.name) }}
-        <br>
         {{ form.email.label(
             class="form-label") }}
-        {{ form.email(
-            class="form-control", value=name_to_update.email) }}
+        {{ form.email(class="form-control") }}
         <br>
         {{ form.password_hash.label(
             class="form-label") }}
-        {{ form.password_hash(
-            class="form-control", value=name_to_update.password_hash) }}
+        {{ form.password_hash(class="form-control") }}
         <br>
         {{ form.submit(
             class="btn btn-secondary") }}
 
-        <a href="{{ url_for('delete', id=id) }}" class="btn btn-danger">Supprimer</a>
     </form>
-    <br><br>
-  
-
 {% endif %}
-
 {% endblock %}
